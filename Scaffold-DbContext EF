@@ -1,0 +1,3 @@
+* If your password contains special characters, you must put all connection string between '';
+
+Scaffold-DbContext -Connection 'Data Source=SERVERNAME_OR_IP;Initial Catalog=DATABASE_NAME;user id=USER;password=PASS;' Microsoft.EntityFrameworkCore.SqlServer
