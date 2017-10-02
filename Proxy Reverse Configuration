@@ -1,0 +1,34 @@
+Find file on path: /etc/apache2/sites-enabled/default-ssl.conf 
+
+Clear default configurations and configure as bellow:
+
+#Redirect requests on port 80 to 443.
+<VirtualHost *:80>
+        RewriteEngine On
+        RewriteCond %{HTTPS} !=on
+        RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+<VirtualHost *:443>
+        #Server Information
+        ServerName 127.0.0.1
+        #Logs path
+        ErrorLog /var/log/apache2/error.log
+        CustomLog /var/log/apache2/access.log combined
+        #SSL Params
+        SSLEngine on
+        SSLCertificateFile      /etc/apache2/ssl/apache.crt
+        SSLCertificateKeyFile   /etc/apache2/ssl/apache.key
+        #Proxies Config
+        ProxyRequests On
+        <Proxy *>
+                AddDefaultCharset off
+                Order deny,allow
+                Allow from all
+        </Proxy>
+        ProxyPreserveHost Off
+        ProxyTimeout 1200
+        ProxyPass /adventureworks/api/ http://127.0.0.1:5001/api/ Keepalive=On
+        ProxyPassReverse /adventureworks/api/ http://127.0.0.1:5001/api/
+        ProxyPass /adventureworks/ http://127.0.0.1:5001/ Keepalive=On
+        ProxyPassReverse /adventureworks/ http://127.0.0.1:5001/
+</VirtualHost>
